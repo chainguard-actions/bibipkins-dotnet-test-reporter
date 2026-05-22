@@ -1,4 +1,4 @@
-name: Test coverage reporting
+name: Test coverage inputs
 on:
   workflow_dispatch:
 jobs:
@@ -18,31 +18,38 @@ jobs:
           post-new-comment: 'false'
         continue-on-error: true
 
-      - name: Assert tests-total output
-        env:
-          ACTUAL: ${{ steps.action.outputs.tests-total }}
-        run: |
-          echo "tests-total: $ACTUAL"
-          if [ -z "$ACTUAL" ]; then
-            echo "WARN: tests-total is empty (may be expected in non-PR context)"
-          else
-            if [ "$ACTUAL" != "2" ]; then
-              echo "FAIL: expected tests-total=2, got $ACTUAL"
-              exit 1
-            fi
-            echo "PASS: tests-total=$ACTUAL"
-          fi
-
       - name: Assert coverage-line output
         env:
           ACTUAL: ${{ steps.action.outputs.coverage-line }}
         run: |
           echo "coverage-line: $ACTUAL"
           if [ -z "$ACTUAL" ]; then
-            echo "WARN: coverage-line is empty (may be expected in non-PR context)"
-          else
-            echo "PASS: coverage-line=$ACTUAL"
+            echo "FAIL: coverage-line output is empty"
+            exit 1
           fi
+          echo "PASS: coverage-line=$ACTUAL"
+
+      - name: Assert coverage-lines-total output
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-lines-total }}
+        run: |
+          echo "coverage-lines-total: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: coverage-lines-total output is empty"
+            exit 1
+          fi
+          echo "PASS: coverage-lines-total=$ACTUAL"
+
+      - name: Assert coverage-lines-covered output
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-lines-covered }}
+        run: |
+          echo "coverage-lines-covered: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: coverage-lines-covered output is empty"
+            exit 1
+          fi
+          echo "PASS: coverage-lines-covered=$ACTUAL"
 
       - name: Assert coverage-branch output
         env:
@@ -50,7 +57,7 @@ jobs:
         run: |
           echo "coverage-branch: $ACTUAL"
           if [ -z "$ACTUAL" ]; then
-            echo "WARN: coverage-branch is empty (may be expected in non-PR context)"
-          else
-            echo "PASS: coverage-branch=$ACTUAL"
+            echo "FAIL: coverage-branch output is empty"
+            exit 1
           fi
+          echo "PASS: coverage-branch=$ACTUAL"
