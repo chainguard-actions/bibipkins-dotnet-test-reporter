@@ -1,0 +1,60 @@
+import { processTestResults } from './results';
+import { processTestCoverage } from './coverage';
+import { getInputs, publishComment, setFailed, setSummary, createTestStatusCheck } from './utils';
+import { formatChangedFileCoverageMarkdown, formatCoverageMarkdown, formatResultMarkdown } from './formatting/markdown';
+import { formatCoverageHtml, formatResultHtml, formatTitleHtml } from './formatting/html';
+
+const run = async (): Promise<void> => {
+  try {
+    const {
+      token,
+      title,
+      resultsPath,
+      coveragePath,
+      coverageType,
+      coverageThreshold,
+      postNewComment,
+      allowFailedTests,
+      changedFilesAndLineNumbers,
+      showFailedTestsOnly,
+      showTestOutput,
+      serverUrl,
+      pullRequestCheck,
+      pullRequestCheckName
+    } = getInputs();
+
+    let comment = '';
+    let summary = formatTitleHtml(title);
+
+    const testResult = await processTestResults(resultsPath, allowFailedTests);
+    const resultHtml = formatResultHtml(testResult, showFailedTestsOnly, showTestOutput);
+    comment += formatResultMarkdown(testResult);
+    summary += resultHtml;
+
+    if (coveragePath) {
+      const testCoverage = await processTestCoverage(coveragePath, coverageType, coverageThreshold, changedFilesAndLineNumbers);
+      comment += testCoverage ? formatCoverageMarkdown(testCoverage, coverageThreshold) : '';
+      summary += testCoverage ? formatCoverageHtml(testCoverage) : '';
+      if (testCoverage) {
+        for(const myMod of testCoverage.modules) {
+          const changedFiles = myMod.files.filter(f => f.changedLinesTotal > 0);
+          if (changedFiles.length > 0) {
+            const tempComment = formatChangedFileCoverageMarkdown(changedFiles);
+            await publishComment(token, serverUrl, `${myMod.name}'s Changed File Coverage`, tempComment, postNewComment);
+          }
+        }
+      }
+    }
+
+    await setSummary(summary);
+    await publishComment(token, serverUrl, title, comment, postNewComment);
+
+    if (pullRequestCheck) {
+      await createTestStatusCheck(token, testResult.success, resultHtml, pullRequestCheckName);
+    }
+  } catch (error) {
+    setFailed((error as Error).message);
+  }
+};
+
+run();

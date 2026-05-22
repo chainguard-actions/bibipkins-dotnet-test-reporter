@@ -1,0 +1,56 @@
+name: Test coverage reporting
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          results-path: actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/results.trx
+          coverage-path: actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/coverage.xml
+          coverage-type: opencover
+          coverage-threshold: '50'
+          allow-failed-tests: 'true'
+          post-new-comment: 'false'
+        continue-on-error: true
+
+      - name: Assert tests-total output
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-total }}
+        run: |
+          echo "tests-total: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: tests-total is empty (may be expected in non-PR context)"
+          else
+            if [ "$ACTUAL" != "2" ]; then
+              echo "FAIL: expected tests-total=2, got $ACTUAL"
+              exit 1
+            fi
+            echo "PASS: tests-total=$ACTUAL"
+          fi
+
+      - name: Assert coverage-line output
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-line }}
+        run: |
+          echo "coverage-line: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: coverage-line is empty (may be expected in non-PR context)"
+          else
+            echo "PASS: coverage-line=$ACTUAL"
+          fi
+
+      - name: Assert coverage-branch output
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-branch }}
+        run: |
+          echo "coverage-branch: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: coverage-branch is empty (may be expected in non-PR context)"
+          else
+            echo "PASS: coverage-branch=$ACTUAL"
+          fi

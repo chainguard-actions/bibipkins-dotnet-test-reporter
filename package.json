@@ -1,0 +1,38 @@
+{
+  "name": "dotnet-test-reporter",
+  "version": "1.0.0",
+  "description": "Github action for reporting dotnet test results",
+  "private": true,
+  "main": "build/main.js",
+  "scripts": {
+    "build": "tsc && ncc build --source-map --license licenses.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bibipkins/Dotnet-Test-Reporter.git"
+  },
+  "keywords": [],
+  "author": "https://github.com/bibipkins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bibipkins/Dotnet-Test-Reporter/issues"
+  },
+  "homepage": "https://github.com/bibipkins/Dotnet-Test-Reporter#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "dotnet-test-reporter": "file:",
+    "fast-sort": "3.4.0",
+    "glob": "^10.3.10",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "@types/xml2js": "^0.4.14",
+    "@vercel/ncc": "^0.38.1",
+    "eslint": "^8.29.0",
+    "eslint-plugin-github": "^4.6.0",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
+  }
+}

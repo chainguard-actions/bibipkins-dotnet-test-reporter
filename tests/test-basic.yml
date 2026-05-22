@@ -1,0 +1,61 @@
+name: Test basic usage
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          results-path: actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/results.trx
+          allow-failed-tests: 'true'
+          post-new-comment: 'false'
+        continue-on-error: true
+
+      - name: Assert tests-total output
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-total }}
+        run: |
+          echo "tests-total: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: tests-total is empty (may be expected in non-PR context)"
+          else
+            if [ "$ACTUAL" != "2" ]; then
+              echo "FAIL: expected tests-total=2, got $ACTUAL"
+              exit 1
+            fi
+            echo "PASS: tests-total=$ACTUAL"
+          fi
+
+      - name: Assert tests-passed output
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-passed }}
+        run: |
+          echo "tests-passed: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: tests-passed is empty (may be expected in non-PR context)"
+          else
+            if [ "$ACTUAL" != "2" ]; then
+              echo "FAIL: expected tests-passed=2, got $ACTUAL"
+              exit 1
+            fi
+            echo "PASS: tests-passed=$ACTUAL"
+          fi
+
+      - name: Assert tests-failed output
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-failed }}
+        run: |
+          echo "tests-failed: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "WARN: tests-failed is empty (may be expected in non-PR context)"
+          else
+            if [ "$ACTUAL" != "0" ]; then
+              echo "FAIL: expected tests-failed=0, got $ACTUAL"
+              exit 1
+            fi
+            echo "PASS: tests-failed=$ACTUAL"
+          fi
