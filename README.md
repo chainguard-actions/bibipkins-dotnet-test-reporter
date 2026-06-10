@@ -8,7 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
-| v1.6.1 | [`v1.6.1`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/tree/v1.6.1) | — |
+| v1.6.1 | [`v1.6.1`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/tree/v1.6.1) | [`5bafb08`](https://github.com/bibipkins/dotnet-test-reporter/commit/5bafb08d6d3a2a779a0be59537305b0a92313f84) |
 
 ## Privacy
 
