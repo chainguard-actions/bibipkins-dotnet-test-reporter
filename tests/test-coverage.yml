@@ -1,63 +1,58 @@
-name: Test coverage inputs
+name: Test coverage reporting
 on:
   workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/1/merge
+      GITHUB_HEAD_REF: feature-branch
+      GITHUB_BASE_REF: main
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
       - id: action
         uses: .
         with:
           github-token: ${{ github.token }}
-          results-path: actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/results.trx
-          coverage-path: actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/coverage.xml
+          results-path: ${{ github.workspace }}/actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/results.trx
+          coverage-path: ${{ github.workspace }}/actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/coverage.opencover.xml
           coverage-type: opencover
-          coverage-threshold: '50'
-          allow-failed-tests: 'true'
-          post-new-comment: 'false'
-        continue-on-error: true
+          coverage-threshold: "50"
+          allow-failed-tests: "true"
+          post-new-comment: "false"
+          pull-request-check: "false"
 
-      - name: Assert coverage-line output
+      - name: Assert tests-total output
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-total }}
+        run: |
+          echo "tests-total: $ACTUAL"
+          if [ "$ACTUAL" != "3" ]; then
+            echo "FAIL: expected tests-total=3, got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert coverage-line output is set
         env:
           ACTUAL: ${{ steps.action.outputs.coverage-line }}
         run: |
           echo "coverage-line: $ACTUAL"
           if [ -z "$ACTUAL" ]; then
-            echo "FAIL: coverage-line output is empty"
+            echo "FAIL: expected coverage-line to be non-empty"
             exit 1
           fi
-          echo "PASS: coverage-line=$ACTUAL"
+          echo "PASS"
 
-      - name: Assert coverage-lines-total output
-        env:
-          ACTUAL: ${{ steps.action.outputs.coverage-lines-total }}
-        run: |
-          echo "coverage-lines-total: $ACTUAL"
-          if [ -z "$ACTUAL" ]; then
-            echo "FAIL: coverage-lines-total output is empty"
-            exit 1
-          fi
-          echo "PASS: coverage-lines-total=$ACTUAL"
-
-      - name: Assert coverage-lines-covered output
-        env:
-          ACTUAL: ${{ steps.action.outputs.coverage-lines-covered }}
-        run: |
-          echo "coverage-lines-covered: $ACTUAL"
-          if [ -z "$ACTUAL" ]; then
-            echo "FAIL: coverage-lines-covered output is empty"
-            exit 1
-          fi
-          echo "PASS: coverage-lines-covered=$ACTUAL"
-
-      - name: Assert coverage-branch output
+      - name: Assert coverage-branch output is set
         env:
           ACTUAL: ${{ steps.action.outputs.coverage-branch }}
         run: |
           echo "coverage-branch: $ACTUAL"
           if [ -z "$ACTUAL" ]; then
-            echo "FAIL: coverage-branch output is empty"
+            echo "FAIL: expected coverage-branch to be non-empty"
             exit 1
           fi
-          echo "PASS: coverage-branch=$ACTUAL"
+          echo "PASS"

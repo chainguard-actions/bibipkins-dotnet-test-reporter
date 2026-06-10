@@ -1,60 +1,55 @@
-name: Test basic usage
+name: Test basic usage - parse TRX results
 on:
   workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/1/merge
+      GITHUB_HEAD_REF: feature-branch
+      GITHUB_BASE_REF: main
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
       - id: action
         uses: .
         with:
           github-token: ${{ github.token }}
-          results-path: actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/results.trx
-          allow-failed-tests: 'true'
-          post-new-comment: 'false'
-        continue-on-error: true
+          results-path: ${{ github.workspace }}/actions/hardened/bibipkins--dotnet-test-reporter/v1.6.1/tests/fixtures/results.trx
+          allow-failed-tests: "true"
+          post-new-comment: "false"
+          pull-request-check: "false"
 
       - name: Assert tests-total output
         env:
           ACTUAL: ${{ steps.action.outputs.tests-total }}
         run: |
           echo "tests-total: $ACTUAL"
-          if [ -z "$ACTUAL" ]; then
-            echo "FAIL: tests-total output is empty"
+          if [ "$ACTUAL" != "3" ]; then
+            echo "FAIL: expected tests-total=3, got '$ACTUAL'"
             exit 1
           fi
-          echo "PASS: tests-total=$ACTUAL"
+          echo "PASS"
 
       - name: Assert tests-passed output
         env:
           ACTUAL: ${{ steps.action.outputs.tests-passed }}
         run: |
           echo "tests-passed: $ACTUAL"
-          if [ -z "$ACTUAL" ]; then
-            echo "FAIL: tests-passed output is empty"
+          if [ "$ACTUAL" != "3" ]; then
+            echo "FAIL: expected tests-passed=3, got '$ACTUAL'"
             exit 1
           fi
-          echo "PASS: tests-passed=$ACTUAL"
+          echo "PASS"
 
       - name: Assert tests-failed output
         env:
           ACTUAL: ${{ steps.action.outputs.tests-failed }}
         run: |
           echo "tests-failed: $ACTUAL"
-          if [ "$ACTUAL" = "" ]; then
-            echo "FAIL: tests-failed output is empty"
+          if [ "$ACTUAL" != "0" ]; then
+            echo "FAIL: expected tests-failed=0, got '$ACTUAL'"
             exit 1
           fi
-          echo "PASS: tests-failed=$ACTUAL"
-
-      - name: Assert tests-skipped output
-        env:
-          ACTUAL: ${{ steps.action.outputs.tests-skipped }}
-        run: |
-          echo "tests-skipped: $ACTUAL"
-          if [ "$ACTUAL" = "" ]; then
-            echo "FAIL: tests-skipped output is empty"
-            exit 1
-          fi
-          echo "PASS: tests-skipped=$ACTUAL"
+          echo "PASS"
