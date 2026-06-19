@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="b58a7448-16d3-424b-af39-0baf72d6b0fc" name="Test Run" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2024-01-01T00:00:00.0000000+00:00" queuing="2024-01-01T00:00:00.0000000+00:00" start="2024-01-01T00:00:01.0000000+00:00" finish="2024-01-01T00:00:02.0000000+00:00" />
+  <TestDefinitions>
+    <UnitTest name="PassingTest" storage="tests.dll" id="11111111-1111-1111-1111-111111111111">
+      <Execution id="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" />
+      <TestMethod codeBase="tests.dll" adapterTypeName="executor://mstestadapter/v2" className="MyTests.UnitTest1" name="PassingTest" />
+    </UnitTest>
+    <UnitTest name="FailingTest" storage="tests.dll" id="22222222-2222-2222-2222-222222222222">
+      <Execution id="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb" />
+      <TestMethod codeBase="tests.dll" adapterTypeName="executor://mstestadapter/v2" className="MyTests.UnitTest1" name="FailingTest" />
+    </UnitTest>
+    <UnitTest name="SkippedTest" storage="tests.dll" id="33333333-3333-3333-3333-333333333333">
+      <Execution id="cccccccc-cccc-cccc-cccc-cccccccccccc" />
+      <TestMethod codeBase="tests.dll" adapterTypeName="executor://mstestadapter/v2" className="MyTests.UnitTest1" name="SkippedTest" />
+    </UnitTest>
+  </TestDefinitions>
+  <Results>
+    <UnitTestResult executionId="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" testId="11111111-1111-1111-1111-111111111111" testName="PassingTest" computerName="localhost" duration="00:00:00.001" startTime="2024-01-01T00:00:01.0000000+00:00" endTime="2024-01-01T00:00:01.0010000+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" />
+    <UnitTestResult executionId="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb" testId="22222222-2222-2222-2222-222222222222" testName="FailingTest" computerName="localhost" duration="00:00:00.002" startTime="2024-01-01T00:00:01.0010000+00:00" endTime="2024-01-01T00:00:01.0030000+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.AreEqual failed. Expected: 1, Actual: 2</Message>
+          <StackTrace>at MyTests.UnitTest1.FailingTest() in /src/MyTests/UnitTest1.cs:line 20</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="cccccccc-cccc-cccc-cccc-cccccccccccc" testId="33333333-3333-3333-3333-333333333333" testName="SkippedTest" computerName="localhost" duration="00:00:00.000" startTime="2024-01-01T00:00:01.0030000+00:00" endTime="2024-01-01T00:00:01.0030000+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cccccccc-cccc-cccc-cccc-cccccccccccc" />
+  </Results>
+  <ResultSummary outcome="Failed">
+    <Counters total="3" executed="2" passed="1" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="1" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+</TestRun>

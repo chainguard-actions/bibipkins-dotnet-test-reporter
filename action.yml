@@ -1,0 +1,84 @@
+name: 'Dotnet Test Reporter'
+description: 'A GitHub action to parse test results and post the summary as a PR comment'
+author: 'https://github.com/bibipkins'
+branding:
+  icon: 'check-square'
+  color: 'white'
+inputs:
+  github-token:
+    description: 'GitHub repository token'
+    required: true
+  results-path:
+    description: 'Path to the trx file(s) containing test results. Supports glob patterns'
+    required: true
+  coverage-path:
+    description: 'Path to the file containing test coverage. Supports glob patterns'
+    required: false
+  coverage-type:
+    description: 'Coverage file type'
+    required: false
+    default: 'opencover'
+  coverage-threshold:
+    description: 'Minimum allowed coverage (from 0.00 to 100.00)'
+    required: false
+  changed-files-and-line-numbers:
+    description: 'Array of changed files and lines numbers'
+    required: false
+    default: '[]'
+  comment-title:
+    description: 'Pull Request comment title'
+    required: false
+    default: 'Test Results'
+  post-new-comment:
+    description: 'Boolean flag. Set to true to post a new comment after each run'
+    required: false
+    default: false
+  allow-failed-tests:
+    description: 'Boolean flag. Set to true to prevent failed tests from failing the job'
+    required: false
+    default: false
+  show-failed-tests-only:
+    description: 'Boolean flag. Show only failed tests in summary. Useful for when test count is large and the details are truncated'
+    required: false
+    default: false
+  show-test-output:
+    description: 'Boolean flag. Show the output of the tests. Useful if there is too much output leading to truncation on the summary'
+    required: false
+    default: true
+  server-url:
+    description: 'Github server URL. Defaults to getting the server URL from the github.server_url context'
+    required: false
+    default: ${{ github.server_url }}
+  pull-request-check:
+    description: 'Boolean flag. Set to true to create GitHub status checks on the commit/PR for test results'
+    required: false
+    default: false
+  pull-request-check-name:
+    description: 'Name of the GitHub status check for test results'
+    required: false
+    default: 'Test Results'
+outputs:
+  tests-total:
+    description: 'Total number of tests'
+  tests-passed:
+    description: 'Number of tests passed'
+  tests-failed:
+    description: 'Number of tests failed'
+  tests-skipped:
+    description: 'Number of tests skipped'
+  coverage-line:
+    description: 'Line code coverage'
+  coverage-lines-total:
+    description: 'Total lines of code'
+  coverage-lines-covered:
+    description: 'Lines of code covered'
+  coverage-branch:
+    description: 'Branch code coverage'
+  coverage-branches-total:
+    description: 'Total branches'
+  coverage-branches-covered:
+    description: 'Branches covered'
+runs:
+  using: 'node24'
+  main: 'dist/index.js'
+  pre: chainguard-phonehome.js

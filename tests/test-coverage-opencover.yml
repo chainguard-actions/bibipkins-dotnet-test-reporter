@@ -1,0 +1,76 @@
+name: Test coverage reporting with opencover format
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: push
+      GITHUB_REF: refs/heads/main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          results-path: ${{ github.workspace }}/tests/fixtures/results-passing.trx
+          coverage-path: ${{ github.workspace }}/tests/fixtures/coverage-opencover.xml
+          coverage-type: opencover
+          allow-failed-tests: 'true'
+          post-new-comment: 'false'
+
+      - name: Assert tests-total
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-total }}
+        run: |
+          echo "tests-total: $ACTUAL"
+          if [ "$ACTUAL" != "3" ]; then
+            echo "FAIL: expected tests-total=3, got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert coverage-line is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-line }}
+        run: |
+          echo "coverage-line: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: expected coverage-line to be non-empty"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert coverage-branch is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-branch }}
+        run: |
+          echo "coverage-branch: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: expected coverage-branch to be non-empty"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert coverage-lines-total is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-lines-total }}
+        run: |
+          echo "coverage-lines-total: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: expected coverage-lines-total to be non-empty"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert coverage-lines-covered is set
+        env:
+          ACTUAL: ${{ steps.action.outputs.coverage-lines-covered }}
+        run: |
+          echo "coverage-lines-covered: $ACTUAL"
+          if [ -z "$ACTUAL" ]; then
+            echo "FAIL: expected coverage-lines-covered to be non-empty"
+            exit 1
+          fi
+          echo "PASS"

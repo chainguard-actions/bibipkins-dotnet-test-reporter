@@ -1,0 +1,63 @@
+name: Test allow-failed-tests flag
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: push
+      GITHUB_REF: refs/heads/main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          github-token: ${{ github.token }}
+          results-path: ${{ github.workspace }}/tests/fixtures/results-with-failures.trx
+          allow-failed-tests: 'true'
+          post-new-comment: 'false'
+
+      - name: Assert tests-total
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-total }}
+        run: |
+          echo "tests-total: $ACTUAL"
+          if [ "$ACTUAL" != "3" ]; then
+            echo "FAIL: expected tests-total=3, got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert tests-passed
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-passed }}
+        run: |
+          echo "tests-passed: $ACTUAL"
+          if [ "$ACTUAL" != "1" ]; then
+            echo "FAIL: expected tests-passed=1, got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert tests-failed
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-failed }}
+        run: |
+          echo "tests-failed: $ACTUAL"
+          if [ "$ACTUAL" != "1" ]; then
+            echo "FAIL: expected tests-failed=1, got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Assert tests-skipped
+        env:
+          ACTUAL: ${{ steps.action.outputs.tests-skipped }}
+        run: |
+          echo "tests-skipped: $ACTUAL"
+          if [ "$ACTUAL" != "1" ]; then
+            echo "FAIL: expected tests-skipped=1, got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"

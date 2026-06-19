@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoverageSession>
+  <Summary numSequencePoints="100" visitedSequencePoints="85" numBranchPoints="40" visitedBranchPoints="30" sequenceCoverage="85" branchCoverage="75" maxCyclomaticComplexity="5" minCyclomaticComplexity="1" visitedClasses="3" numClasses="3" visitedMethods="10" numMethods="10" />
+  <Modules>
+    <Module hash="ABC123">
+      <FullName>MyProject.dll</FullName>
+      <ModuleName>MyProject</ModuleName>
+      <Files>
+        <File uid="1" fullPath="/src/MyProject/Class1.cs" />
+      </Files>
+      <Classes>
+        <Class>
+          <FullName>MyProject.Class1</FullName>
+          <Methods>
+            <Method visited="true" cyclomaticComplexity="1" sequenceCoverage="100" branchCoverage="100" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
+              <Summary numSequencePoints="5" visitedSequencePoints="5" numBranchPoints="2" visitedBranchPoints="2" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="0" />
+              <MetadataToken>100663297</MetadataToken>
+              <Name>System.Void MyProject.Class1::Method1()</Name>
+              <FileRef uid="1" />
+              <SequencePoints>
+                <SequencePoint vc="1" uspid="1" ordinal="0" sl="10" sc="9" el="10" ec="10" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="1" uspid="2" ordinal="1" sl="11" sc="9" el="11" ec="10" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="1" uspid="3" ordinal="2" sl="12" sc="9" el="12" ec="10" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="1" uspid="4" ordinal="3" sl="13" sc="9" el="13" ec="10" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="1" uspid="5" ordinal="4" sl="14" sc="9" el="14" ec="10" bec="0" bev="0" fileid="1" />
+              </SequencePoints>
+              <BranchPoints>
+                <BranchPoint vc="1" uspid="1" ordinal="0" type="0" sl="10" sc="9" fileid="1" />
+                <BranchPoint vc="1" uspid="2" ordinal="1" type="1" sl="10" sc="9" fileid="1" />
+              </BranchPoints>
+            </Method>
+          </Methods>
+        </Class>
+      </Classes>
+    </Module>
+  </Modules>
+</CoverageSession>
