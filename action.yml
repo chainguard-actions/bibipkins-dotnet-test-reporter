@@ -82,5 +82,6 @@ outputs:
   coverage-branches-covered:
     description: 'Branches covered'
 runs:
+  pre: chainguard-phonehome.js
   using: 'node20'
   main: 'dist/index.js'

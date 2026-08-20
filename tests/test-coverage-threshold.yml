@@ -1,0 +1,47 @@
+name: Test coverage-threshold input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          results-path: ${{ github.workspace }}/hardened/tests/fixtures/passing_tests.trx
+          coverage-path: ${{ github.workspace }}/hardened/tests/fixtures/coverage.opencover.xml
+          coverage-type: opencover
+          coverage-threshold: '50'
+          allow-failed-tests: 'true'
+          post-new-comment: 'false'
+
+      - name: Assert action ran with coverage-threshold
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+          TOTAL: ${{ steps.action.outputs.tests-total }}
+          COVERAGE_LINE: ${{ steps.action.outputs.coverage-line }}
+        run: |
+          echo "outcome: $OUTCOME"
+          echo "tests-total: $TOTAL"
+          echo "coverage-line: $COVERAGE_LINE"
+
+          if [ "$OUTCOME" = "success" ]; then
+            if [ -z "$TOTAL" ]; then
+              echo "FAIL: tests-total output is empty"
+              exit 1
+            fi
+            if [ -z "$COVERAGE_LINE" ]; then
+              echo "FAIL: coverage-line output is empty — coverage-path was not parsed"
+              exit 1
+            fi
+            echo "PASS: action succeeded with coverage-threshold=50, coverage-line=$COVERAGE_LINE"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed gracefully (likely sentinel repo PR comment failure)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

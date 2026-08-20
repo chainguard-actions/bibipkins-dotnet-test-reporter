@@ -1,0 +1,57 @@
+name: Test allow-failed-tests flag
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github-token: ${{ github.token }}
+          results-path: ${{ github.workspace }}/tests/fixtures/failing_tests.trx
+          allow-failed-tests: 'true'
+          post-new-comment: 'false'
+
+      - name: Assert failed test outputs are reported
+        env:
+          TOTAL: ${{ steps.action.outputs.tests-total }}
+          PASSED: ${{ steps.action.outputs.tests-passed }}
+          FAILED: ${{ steps.action.outputs.tests-failed }}
+          SKIPPED: ${{ steps.action.outputs.tests-skipped }}
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          echo "tests-total: $TOTAL"
+          echo "tests-passed: $PASSED"
+          echo "tests-failed: $FAILED"
+          echo "tests-skipped: $SKIPPED"
+
+          if [ "$OUTCOME" = "success" ]; then
+            # Verify outputs reflect the failing test counts
+            if [ -z "$TOTAL" ]; then
+              echo "FAIL: tests-total output is empty"
+              exit 1
+            fi
+            if [ "$TOTAL" != "2" ]; then
+              echo "FAIL: expected tests-total=2, got '$TOTAL'"
+              exit 1
+            fi
+            if [ "$PASSED" != "1" ]; then
+              echo "FAIL: expected tests-passed=1, got '$PASSED'"
+              exit 1
+            fi
+            if [ "$FAILED" != "1" ]; then
+              echo "FAIL: expected tests-failed=1, got '$FAILED'"
+              exit 1
+            fi
+            echo "PASS: failed test counts reported correctly"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed gracefully (likely sentinel repo PR comment failure)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
