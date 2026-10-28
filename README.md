@@ -6,10 +6,10 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 ## Versions
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| v1.6.1 | [`v1.6.1`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/tree/v1.6.1) | [`5bafb08`](https://github.com/bibipkins/dotnet-test-reporter/commit/5bafb08d6d3a2a779a0be59537305b0a92313f84) |
-| v1.6.4 | [`v1.6.4`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/tree/v1.6.4) | [`bceddc4`](https://github.com/bibipkins/dotnet-test-reporter/commit/bceddc4c430aa294439b73f7e29081b4afa4522f) |
+| Version | Tag | Upstream commit | Hardening report |
+|---------|-----|-----------------|------------------|
+| v1.6.1 | [`v1.6.1`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/tree/v1.6.1) | [`5bafb08`](https://github.com/bibipkins/dotnet-test-reporter/commit/5bafb08d6d3a2a779a0be59537305b0a92313f84) | [`HARDENING.md`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/blob/v1.6.1/HARDENING.md) |
+| v1.6.4 | [`v1.6.4`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/tree/v1.6.4) | [`bceddc4`](https://github.com/bibipkins/dotnet-test-reporter/commit/bceddc4c430aa294439b73f7e29081b4afa4522f) | [`HARDENING.md`](https://github.com/chainguard-actions/bibipkins-dotnet-test-reporter/blob/v1.6.4/HARDENING.md) |
 
 ## Privacy
 
